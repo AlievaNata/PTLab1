@@ -12,14 +12,14 @@ class TestJsonDataReader:
     @pytest.fixture()
     def json_content(self) -> tuple[str, DataType]:
         data = {
-            "Иванов Иван Иванович": [
-                ["математика", 80],
-                ["литература", 76]
-            ],
-            "Петров Петр Петрович": [
-                ["математика", 100],
-                ["химия", 61]
-            ]
+            "Иванов Иван Иванович": {
+                "математика": 80,
+                "литература": 76
+            },
+            "Петров Петр Петрович": {
+                "математика": 100,
+                "химия": 61
+            }
         }
 
         expected: DataType = {
@@ -73,6 +73,7 @@ class TestJsonDataReader:
             reader.read(str(p))
 
     # ---------- Ошибка: неправильная структура JSON ----------
+    # Был словарь студентов, но предметы не словарь
     def test_read_wrong_structure(self, tmpdir):
         p = tmpdir.mkdir("datadir").join("wrong.json")
         p.write_text('{"Иванов": "математика"}', encoding="utf-8")
@@ -81,10 +82,10 @@ class TestJsonDataReader:
         with pytest.raises(TypeError):
             reader.read(str(p))
 
-    # ---------- Пустой список предметов ----------
+    # ---------- Пустой словарь предметов ----------
     def test_read_empty_subjects(self, tmpdir):
         p = tmpdir.mkdir("datadir").join("empty_subjects.json")
-        p.write_text('{"Иванов": []}', encoding="utf-8")
+        p.write_text('{"Иванов": {}}', encoding="utf-8")
 
         reader = JsonDataReader()
         result = reader.read(str(p))
@@ -93,7 +94,7 @@ class TestJsonDataReader:
     # ---------- Оценки строками ----------
     def test_read_scores_as_strings(self, tmpdir):
         p = tmpdir.mkdir("datadir").join("scores.json")
-        p.write_text('{"Иванов": [["математика", "80"]]}', encoding="utf-8")
+        p.write_text('{"Иванов": {"математика": "80"}}', encoding="utf-8")
 
         reader = JsonDataReader()
         result = reader.read(str(p))
@@ -102,7 +103,7 @@ class TestJsonDataReader:
     # ---------- Оценки float ----------
     def test_read_scores_float(self, tmpdir):
         p = tmpdir.mkdir("datadir").join("float.json")
-        p.write_text('{"Иванов": [["математика", 80.5]]}', encoding="utf-8")
+        p.write_text('{"Иванов": {"математика": 80.5}}', encoding="utf-8")
 
         reader = JsonDataReader()
         result = reader.read(str(p))
@@ -113,9 +114,9 @@ class TestJsonDataReader:
         p = tmpdir.mkdir("datadir").join("multi.json")
         p.write_text(
             json.dumps({
-                "А": [["математика", 1]],
-                "Б": [["химия", 2]],
-                "В": [["физика", 3]]
+                "А": {"математика": 1},
+                "Б": {"химия": 2},
+                "В": {"физика": 3}
             }, ensure_ascii=False),
             encoding="utf-8"
         )

@@ -5,7 +5,7 @@ from DataReader import DataReader
 
 
 class JsonDataReader(DataReader):
-    """Читает данные студентов из JSON‑файла."""
+    """Читает данные студентов из JSON‑файла с предметами в виде словаря."""
 
     def __init__(self) -> None:
         self.students: DataType = {}
@@ -15,34 +15,22 @@ class JsonDataReader(DataReader):
         with open(path, encoding="utf-8") as file:
             data = json.load(file)
 
-        # Проверка: JSON должен быть словарём
+        # Проверка: JSON должен быть словарём студентов
         if not isinstance(data, dict):
             raise TypeError("Ожидался словарь студентов")
 
         result: DataType = {}
 
         for student, subjects in data.items():
-
-            # Проверка: список предметов
-            if not isinstance(subjects, list):
-                raise TypeError("Ожидался список предметов")
+            # Проверка: предметы должны быть словарём
+            if not isinstance(subjects, dict):
+                raise TypeError("Ожидался словарь предметов")
 
             parsed_subjects = []
-
-            for item in subjects:
-
-                # Каждый предмет должен быть списком из двух элементов
-                if not isinstance(item, list) or len(item) != 2:
-                    raise TypeError(
-                        "Каждый предмет должен быть списком из двух элементов"
-                    )
-                subj, score = item
-
-                # Проверка типов
+            for subj, score in subjects.items():
                 if not isinstance(subj, str):
                     raise TypeError("Название предмета должно быть строкой")
 
-                # Преобразуем оценку в int
                 try:
                     score = int(score)
                 except (ValueError, TypeError):

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from src.main import get_path_from_arguments
+from src.main import get_path_from_arguments, select_reader
+from src.TextDataReader import TextDataReader
+from src.JsonDataReader import JsonDataReader
 
 
 @pytest.fixture()
@@ -25,3 +27,17 @@ def test_get_path_from_noncorrect_arguments(
 ) -> None:
     with pytest.raises(SystemExit):
         get_path_from_arguments(noncorrect_arguments_string)
+
+def test_select_reader_txt():
+    reader = select_reader("students.txt")
+    assert isinstance(reader, TextDataReader)
+
+
+def test_select_reader_json():
+    reader = select_reader("students.json")
+    assert isinstance(reader, JsonDataReader)
+
+
+def test_select_reader_wrong_extension():
+    with pytest.raises(ValueError):
+        select_reader("students.csv")

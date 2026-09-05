@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - json-reader
+      - rating-analyzer
 
 jobs:
   build:
