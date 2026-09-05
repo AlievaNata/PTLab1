@@ -20,6 +20,8 @@ def test_get_path_from_correct_arguments(correct_arguments_string) -> None:
     assert path == expected
 
 
-def test_get_path_from_noncorrect_arguments(noncorrect_arguments_string) -> None:
+def test_get_path_from_noncorrect_arguments(
+    noncorrect_arguments_string
+) -> None:
     with pytest.raises(SystemExit):
         get_path_from_arguments(noncorrect_arguments_string)
