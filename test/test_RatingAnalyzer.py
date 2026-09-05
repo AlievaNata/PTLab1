@@ -49,7 +49,7 @@ class TestRatingAnalyzer:
         analyzer = RatingAnalyzer(ratings)
         result = analyzer.get_last_quartile_students()
         assert result == ["Г"]
-    
+
     # Проверяет корректный расчёт порога квартиля.
     def test_quartile_threshold(self):
         ratings = {"А": 10, "Б": 20, "В": 30, "Г": 40}

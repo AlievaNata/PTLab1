@@ -28,6 +28,7 @@ def test_get_path_from_noncorrect_arguments(
     with pytest.raises(SystemExit):
         get_path_from_arguments(noncorrect_arguments_string)
 
+
 def test_select_reader_txt():
     reader = select_reader("students.txt")
     assert isinstance(reader, TextDataReader)
