@@ -11,13 +11,45 @@ class JsonDataReader(DataReader):
         self.students: DataType = {}
 
     def read(self, path: str) -> DataType:
+        # Загружаем JSON
         with open(path, encoding="utf-8") as file:
             data = json.load(file)
 
-        # Преобразуем JSON‑структуру в DataType
-        for student, subjects in data.items():
-            self.students[student] = [
-                (subj, int(score)) for subj, score in subjects
-            ]
+        # Проверка: JSON должен быть словарём
+        if not isinstance(data, dict):
+            raise TypeError("Ожидался словарь студентов")
 
-        return self.students
+        result: DataType = {}
+
+        for student, subjects in data.items():
+
+            # Проверка: список предметов
+            if not isinstance(subjects, list):
+                raise TypeError("Ожидался список предметов")
+
+            parsed_subjects = []
+
+            for item in subjects:
+
+                # Каждый предмет должен быть списком из двух элементов
+                if not isinstance(item, list) or len(item) != 2:
+                    raise TypeError("Каждый предмет должен быть списком из двух элементов")
+
+                subj, score = item
+
+                # Проверка типов
+                if not isinstance(subj, str):
+                    raise TypeError("Название предмета должно быть строкой")
+
+                # Преобразуем оценку в int
+                try:
+                    score = int(score)
+                except (ValueError, TypeError):
+                    raise TypeError("Оценка должна быть числом")
+
+                parsed_subjects.append((subj, score))
+
+            result[student] = parsed_subjects
+
+        self.students = result
+        return result
