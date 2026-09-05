@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from src.main import get_path_from_arguments
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pytest
+
+from src.main import get_path_from_arguments
 
 
 @pytest.fixture()
@@ -16,16 +14,12 @@ def noncorrect_arguments_string() -> list[str]:
     return ["/home/user/file.txt"]
 
 
-def test_get_path_from_correct_arguments(
-    correct_arguments_string: tuple[list[str], str]
-) -> None:
-    path = get_path_from_arguments(correct_arguments_string[0])
-    assert path == correct_arguments_string[1]
+def test_get_path_from_correct_arguments(correct_arguments_string) -> None:
+    args, expected = correct_arguments_string
+    path = get_path_from_arguments(args)
+    assert path == expected
 
 
-def test_get_path_from_noncorrect_arguments(
-    noncorrect_arguments_string: list[str]
-) -> None:
-    with pytest.raises(SystemExit) as e:
-        get_path_from_arguments(noncorrect_arguments_string[0])
-    assert e.type == SystemExit
+def test_get_path_from_noncorrect_arguments(noncorrect_arguments_string) -> None:
+    with pytest.raises(SystemExit):
+        get_path_from_arguments(noncorrect_arguments_string)
