@@ -4,8 +4,8 @@ import sys
 import os
 
 from CalcRating import CalcRating
-from TextDataReader import TextDataReader
-from JsonDataReader import JsonDataReader
+from src.TextDataReader import TextDataReader
+from src.JsonDataReader import JsonDataReader
 from RatingAnalyzer import RatingAnalyzer
 
 
