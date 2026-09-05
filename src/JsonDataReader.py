@@ -33,8 +33,9 @@ class JsonDataReader(DataReader):
 
                 # Каждый предмет должен быть списком из двух элементов
                 if not isinstance(item, list) or len(item) != 2:
-                    raise TypeError("Каждый предмет должен быть списком из двух элементов")
-
+                    raise TypeError(
+                        "Каждый предмет должен быть списком из двух элементов"
+                    )
                 subj, score = item
 
                 # Проверка типов
